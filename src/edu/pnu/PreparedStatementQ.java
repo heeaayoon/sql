@@ -28,7 +28,7 @@ public class PreparedStatementQ {
 
 				int x;
 				switch (option) {
-
+//
 				case 1: method1(con); break;
 				case 2: method2(con); break;
 				case 3: method3(con); break;
