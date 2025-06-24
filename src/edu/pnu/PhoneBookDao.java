@@ -29,7 +29,7 @@ public class PhoneBookDao {
 		System.out.println("bye");
 	}
 
-	private static void insertPhonebook(Connection con) throws SQLException {
+	private static void insertPhonebook(Connection con) throws SQLException { //원하는 콜론의 값만 넣는 방법은? // 그냥 null을 집어넣거나, 빈칸을 만들기(enter)
 		System.out.print("이름 :");
 		String a = sc.next();
 		System.out.print("휴대폰번호 :");
@@ -103,7 +103,6 @@ public class PhoneBookDao {
 		case 0 : break;
 		default:  System.out.println("잘못된 선택입니다."); break;
 		}
-		
 		return content;
 	}
 	
@@ -130,7 +129,8 @@ public class PhoneBookDao {
 		}
 	}
 
-//	private static void nativeQurey(Connection con) throws SQLException { //쿼리문(select만) 입력 메소드
+	//쿼리문(select만) 입력 가능한 메소드
+//	private static void nativeQurey(Connection con) throws SQLException {
 //		System.out.println("쿼리문을 입력하시오");
 //		sc.nextLine();
 //		String qStat = sc.nextLine();
@@ -147,16 +147,15 @@ public class PhoneBookDao {
 //		}
 //	}	
 	
-	
-	
-	private static void nativeQurey(Connection con) throws SQLException { //쿼리문(select이외의 쿼리문도 추가) 입력 메소드
+	 //쿼리문 입력 메소드
+	private static void nativeQurey(Connection con) throws SQLException {
 		System.out.println("쿼리문을 입력하시오");
 		sc.nextLine();
 		String qStat = sc.nextLine();
 		PreparedStatement ps = con.prepareStatement(qStat);
 		boolean hasResultSet = ps.execute(); //반환값이 ResultSet이면(select문) true 반환/ 아니면(select 이외) false 반환
 		if(hasResultSet) { //select믄인 경우
-			ResultSet rs = ps.executeQuery();
+			ResultSet rs = ps.getResultSet();
 			ResultSetMetaData meta = rs.getMetaData(); //1. ResultSet으로부터 MetaData를 얻어옴
 			int count = meta.getColumnCount(); //2. MetaData로부터 컬럼 개수를 얻어옴
 			while (rs.next()) {
@@ -167,7 +166,7 @@ public class PhoneBookDao {
 				System.out.println();
 			}			
 		}else { //select문이 아닌 경우
-			int res = ps.executeUpdate();
+			int res = ps.getUpdateCount();
 			System.out.println(res+"건의 데이터가 변경되었습니다.");
 		}
 	}	
