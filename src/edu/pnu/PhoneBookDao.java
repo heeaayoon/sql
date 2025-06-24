@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Scanner;
 
 public class PhoneBookDao {
@@ -29,31 +30,62 @@ public class PhoneBookDao {
 		System.out.println("bye");
 	}
 
-	private static void insertPhonebook(Connection con) throws SQLException { //원하는 콜론의 값만 넣는 방법은? // 그냥 null을 집어넣거나, 빈칸을 만들기(enter)
+	private static void insertPhonebook(Connection con) throws SQLException { 
+		//원하는 콜론의 값만 넣는 방법은? // 그냥 null을 집어넣거나, 빈칸을 만들기(enter)
+		//next() : 공백(Space, Tab, Enter 등)이 나오기 직전까지의 연속된 문자열(단어 하나)를 읽고 반환
+		//nextLine() : 개행 문자(\n, Enter)를 만날 때까지 입력된 한 줄 전체를 읽어서 반환
+		//nextLine()으로 데이터를 받아야 -> enter 치면 넘어갈 수 있음 
+		  if (sc.hasNextLine()) {
+	           sc.nextLine(); 
+	        }
+		
 		System.out.print("이름 :");
-		String a = sc.next();
+		String a = sc.nextLine();
+		//sc.nextLine();
 		System.out.print("휴대폰번호 :");
-		String b = sc.next();
+		String b = sc.nextLine();
+		//sc.nextLine();
 		System.out.print("집 전화번호/주소 :");
-		String c = sc.next();
+		String c = sc.nextLine();
+		//sc.nextLine();
 		System.out.print("회사 전화번호/주소 :");
-		String d = sc.next();
+		String d = sc.nextLine();
+		//sc.nextLine();
 		System.out.print("e-mail :");
-		String e = sc.next();
+		String e = sc.nextLine();
 		
 		String sql = "insert into phonebook(name, mobile, home, company, email) values(?,?,?,?,?)";
 		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setString(1, a);
-		ps.setString(2, b);
-		ps.setString(3, c);
-		ps.setString(4, d);
-		ps.setString(5, e);
+		
+		
+		
+		//만약 해당 콜론에 값을 입력하지 않았다면(enter) -> null로 설정
+		//setNull(idx, 데이터 타입) 메서드 : 데이터베이스에 해당 위치에 NULL 값을 삽입하도록 지정
+		if(a.isEmpty()) {
+			ps.setNull(1, Types.VARCHAR); //데이터 타입임이 문자열임을 명시
+		}else ps.setString(1, a);
+		
+		if(b.isEmpty()) {
+			ps.setNull(2, Types.VARCHAR); 
+		}else ps.setString(2, b);
+		
+		if(c.isEmpty()) {
+			ps.setNull(3, Types.VARCHAR); 
+		}else ps.setString(3, c);
+		
+		if(d.isEmpty()) {
+			ps.setNull(4, Types.VARCHAR); 
+		}else ps.setString(4, d);
+		
+		if(e.isEmpty()) {
+			ps.setNull(5, Types.VARCHAR); 
+		}else ps.setString(5, e);
+		
 		int res = ps.executeUpdate();
 		System.out.println(res+"건의 데이터를 입력했습니다.");
 	}
 	
 	private static void updatePhonebook(Connection con) { //무슨 정보를 update할지 고르는 메소드 추가
-		
 		try {
 			System.out.print("update할 ID 값을 입력하시오 : ");
 			int id = sc.nextInt();
